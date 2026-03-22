@@ -17,15 +17,25 @@
     </nav>
 
     <main class="glass-dashboard">
-        <h2 class="dashboard-title">Today's Focus</h2>
-        
-        <div class="task-input-area">
-            <input type="text" id="taskInput" placeholder="What are we studying today?">
-            <button id="addTaskBtn">Add</button>
+    <header class="dashboard-header">
+        <div class="progress-widget">
+            <svg class="progress-ring" width="120" height="120">
+                <circle class="progress-ring__bg" stroke="rgba(0,0,0,0.05)" stroke-width="12" fill="transparent" r="50" cx="60" cy="60"/>
+                <circle class="progress-ring__fill" stroke="#4caf50" stroke-width="12" stroke-linecap="round" fill="transparent" r="50" cx="60" cy="60"/>
+            </svg>
+            <div class="progress-content">
+                <span id="progress-percent">0%</span>
+                <p id="progress-stat">0 of 0</p>
+            </div>
         </div>
-
-        <ul id="taskList" class="task-list">
-            </ul>
+        <h2 class="dashboard-title">Today's Focus</h2>
+    </header>
+    
+    <div class="task-input-area">
+        <input type="text" id="taskInput" placeholder="What are we studying today?">
+        <button id="addTaskBtn">Add</button>
+    </div>
+    <ul id="taskList" class="task-list"></ul>
     </main>
 
     <script src="app.js"></script>

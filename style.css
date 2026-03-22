@@ -125,3 +125,91 @@ body {
     flex-direction: column;
     gap: 15px;
 }
+/* --- Dynamic Task Items --- */
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.task-item:hover {
+    transform: translateX(5px); /* Smooth slide to the right */
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.task-text {
+    color: #4a4a4a;
+    font-weight: 500;
+    cursor: pointer; /* Makes it look clickable */
+    transition: color 0.3s ease;
+}
+
+/* This is the class we will add/remove with JavaScript */
+.task-text.completed {
+    text-decoration: line-through;
+    color: #a0a0a0; /* Fades the text out slightly */
+}
+
+/* --- Delete Button --- */
+.delete-btn {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    line-height: 1; /* Keeps the X perfectly centered */
+}
+
+.delete-btn:hover {
+    transform: scale(1.2); /* Pops slightly when hovered */
+}
+/* --- Checkbox & Layout Updates --- */
+.task-content {
+    display: flex;
+    align-items: center;
+    flex: 1; /* Pushes the delete button all the way to the right */
+}
+
+/* The Custom Checkbox */
+.task-checkbox {
+    appearance: none; /* This wipes out the ugly default browser box! */
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(100, 100, 100, 0.3);
+    border-radius: 6px; /* Soft, modern corners */
+    margin-right: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+}
+
+/* When the checkbox is clicked/true */
+.task-checkbox:checked {
+    background: #4caf50; /* A crisp, satisfying green */
+    border-color: #4caf50;
+}
+
+/* Drawing the checkmark icon using CSS */
+.task-checkbox:checked::after {
+    content: '✔';
+    color: white;
+    font-size: 14px;
+}
+
+/* Update task-text (Remove the cursor: pointer since we don't click text anymore) */
+.task-text {
+    color: #4a4a4a;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}

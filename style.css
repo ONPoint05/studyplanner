@@ -326,3 +326,82 @@ body {
 .text-danger {
     color: #ff6b6b; /* Red color for the remove action */
 }
+/* --- App Wrapper & Side Panel Layout --- */
+.app-wrapper {
+    position: relative; 
+    max-width: 600px; /* Should match your main dashboard max-width */
+    margin: 0 auto; 
+}
+
+.glass-side-panel {
+    position: absolute;
+    left: calc(100% + 30px); 
+    top: 60px; 
+    width: 320px;
+    padding: 25px;
+    
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.side-title { color: #4a4a4a; margin-bottom: 15px; font-size: 1.2rem; }
+
+/* --- Concentric Rings --- */
+.concentric-container { margin-bottom: 25px; }
+
+.concentric-rings circle {
+    fill: transparent;
+    stroke-width: 12;
+}
+
+.ring-bg { stroke: rgba(255, 255, 255, 0.4); }
+
+.ring-fill {
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.ring-low { stroke: #4dabf7; }
+.ring-medium { stroke: #fab005; }
+.ring-high { stroke: #fa5252; }
+
+/* --- Side Filter Buttons & List --- */
+.side-filters {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    flex: 1;
+    padding: 8px 0;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.3);
+    color: #4a4a4a;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.side-list { width: 100%; }
+.side-list .task-item { padding: 10px 15px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+.side-list .task-text { font-size: 0.9rem; flex: 1; }
+/* Smaller checkbox for the side panel */
+.side-list .task-checkbox { width: 16px; height: 16px; margin: 0; }

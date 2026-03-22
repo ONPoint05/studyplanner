@@ -65,6 +65,7 @@ function addTask() {
 function saveAndRender() {
     localStorage.setItem('studyTasks', JSON.stringify(tasks));
     renderTasks();
+    renderSidePanel(); // Also update the side panel whenever tasks change
 }
 
 // 6. Global Actions
@@ -151,3 +152,76 @@ bgUpload.addEventListener('change', function() {
     };
     reader.readAsDataURL(file);
 });
+// --- NEW: Priority Overview Side Panel Logic ---
+const sideTaskList = document.getElementById('sideTaskList');
+const filterBtns = document.querySelectorAll('.filter-btn');
+
+// Setup the 3 Rings
+const rings = {
+    low: { el: document.querySelector('.ring-low'), radius: 30 },
+    medium: { el: document.querySelector('.ring-medium'), radius: 50 },
+    high: { el: document.querySelector('.ring-high'), radius: 70 }
+};
+
+// Initialize SVG lengths
+for (const key in rings) {
+    const ring = rings[key];
+    ring.circumference = 2 * Math.PI * ring.radius;
+    ring.el.style.strokeDasharray = `${ring.circumference} ${ring.circumference}`;
+    ring.el.style.strokeDashoffset = ring.circumference;
+}
+
+let currentFilter = 'high'; // Default view
+
+function updateConcentricRings() {
+    ['low', 'medium', 'high'].forEach(priorityLevel => {
+        const priorityTasks = tasks.filter(t => (t.priority || 'medium') === priorityLevel);
+        const total = priorityTasks.length;
+        const completed = priorityTasks.filter(t => t.completed).length;
+        
+        const percentage = total === 0 ? 0 : (completed / total);
+        
+        const ring = rings[priorityLevel];
+        const offset = ring.circumference - (percentage * ring.circumference);
+        ring.el.style.strokeDashoffset = offset;
+    });
+}
+
+function renderSidePanel() {
+    sideTaskList.innerHTML = '';
+    
+    // Filter tasks based on the active button state
+    const filteredTasks = tasks.filter(t => (t.priority || 'medium') === currentFilter);
+    
+    filteredTasks.forEach((task, index) => {
+        // Find the original index of the task in the main array so toggling works properly
+        const originalIndex = tasks.indexOf(task);
+        
+        const li = document.createElement('li');
+        li.classList.add('task-item', `priority-${currentFilter}`);
+        const isDone = task.completed ? 'completed' : '';
+        const isChecked = task.completed ? 'checked' : '';
+        
+        // Added the checkbox so you can check tasks off right from the side panel
+        li.innerHTML = `
+            <input type="checkbox" class="task-checkbox" onchange="toggleTask(${originalIndex})" ${isChecked}>
+            <span class="task-text ${isDone}" style="opacity: ${task.completed ? '0.6' : '1'}">${task.text}</span>
+        `;
+        sideTaskList.appendChild(li);
+    });
+    
+    updateConcentricRings();
+}
+
+// Filter Button Click Events
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentFilter = this.getAttribute('data-priority');
+        renderSidePanel();
+    });
+});
+
+// INITIAL CALL: Trigger the side panel to render when the page loads
+renderSidePanel();

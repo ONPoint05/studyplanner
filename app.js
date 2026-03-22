@@ -17,17 +17,41 @@ const circumference = 2 * Math.PI * radius; // C = 2πr (approx 314)
 progressFill.style.strokeDasharray = `${circumference} ${circumference}`;
 
 function updateProgressBar() {
-    const total = tasks.length;
-    const completed = tasks.filter(t => t.completed).length;
-    const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+    // 1. Define the point system
+    const weights = {
+        low: 1,
+        medium: 2,
+        high: 3
+    };
+
+    // 2. Calculate TOTAL possible points across all tasks
+    const totalPoints = tasks.reduce(function(sum, task) {
+        const priority = task.priority || 'medium'; // Backwards compatibility
+        return sum + weights[priority];
+    }, 0);
+
+    // 3. Calculate EARNED points from completed tasks
+    const earnedPoints = tasks.reduce(function(sum, task) {
+        if (task.completed) {
+            const priority = task.priority || 'medium';
+            return sum + weights[priority];
+        }
+        return sum; // If not completed, add 0
+    }, 0);
+
+    // 4. Calculate the new weighted percentage
+    const percentage = totalPoints === 0 ? 0 : Math.round((earnedPoints / totalPoints) * 100);
     
-    // Calculate how much of the "314px" string to hide
+    // 5. Animate the SVG Circle
     const offset = circumference - (percentage / 100 * circumference);
     progressFill.style.strokeDashoffset = offset;
     
-    // Update Text
+    // 6. Update the Text UI
     progressPercent.innerText = `${percentage}%`;
-    progressStat.innerText = `${completed} of ${total} tasks`;
+    
+    // We can keep the text showing physical task count, while the circle shows "effort" percentage
+    const completedTasks = tasks.filter(t => t.completed).length;
+    progressStat.innerText = `${completedTasks} of ${tasks.length} tasks`;
 }
 
 // 4. The Render Function

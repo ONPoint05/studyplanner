@@ -9,7 +9,11 @@ const progressPercent = document.getElementById('progress-percent');
 const progressStat = document.getElementById('progress-stat');
 
 const sideTaskList = document.getElementById('sideTaskList');
+const sideProgressPercent = document.getElementById('side-progress-percent');
+const sideProgressStat = document.getElementById('side-progress-stat');
 const filterBtns = document.querySelectorAll('.filter-btn');
+
+
 
 // 2. State Management
 let tasks = JSON.parse(localStorage.getItem('studyTasks')) || [];
@@ -64,8 +68,25 @@ function updateConcentricRings() {
 
 function renderSidePanel() {
     sideTaskList.innerHTML = '';
+    
+    // 1. Get only the tasks for the currently clicked button
     const filteredTasks = tasks.filter(t => (t.priority || 'medium') === currentFilter);
     
+    // --- NEW: Calculate and Update Side Stats ---
+    const totalSide = filteredTasks.length;
+    const completedSide = filteredTasks.filter(t => t.completed).length;
+    const percentageSide = totalSide === 0 ? 0 : Math.round((completedSide / totalSide) * 100);
+
+    sideProgressPercent.innerText = `${percentageSide}%`;
+    sideProgressStat.innerText = `${completedSide} of ${totalSide} tasks`;
+
+    // Change the percentage color to match the active priority!
+    if (currentFilter === 'high') sideProgressPercent.style.color = '#fa5252';
+    if (currentFilter === 'medium') sideProgressPercent.style.color = '#fab005';
+    if (currentFilter === 'low') sideProgressPercent.style.color = '#4dabf7';
+    // --------------------------------------------
+
+    // 2. Render the list
     filteredTasks.forEach(task => {
         const originalIndex = tasks.indexOf(task);
         const li = document.createElement('li');

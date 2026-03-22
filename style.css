@@ -432,6 +432,29 @@ body {
 .ring-medium { stroke: #fab005; }
 .ring-high { stroke: #fa5252; }
 
+/* --- Side Panel Stats --- */
+.side-stats {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    margin-top: -10px; /* Pulls it slightly closer to the rings */
+    margin-bottom: 20px;
+}
+
+.stat-percent {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4a4a4a;
+    transition: color 0.3s ease;
+}
+
+.stat-count {
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 500;
+}
+
 .side-filters {
     display: flex;
     gap: 10px;

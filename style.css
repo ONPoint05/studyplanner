@@ -1,0 +1,127 @@
+/* --- Global Styles & Animated Background --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    /* Soft white/gray animated gradient */
+    background: linear-gradient(-45deg, #fdfbfb, #ebedee, #f5f7fa, #c3cfe2);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease-in infinite;
+    color: #333;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Glass Navbar --- */
+.glass-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4a4a4a;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #4a4a4a;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #7b8a97;
+}
+
+/* --- Main Glass Dashboard --- */
+.glass-dashboard {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #4a4a4a;
+}
+
+/* --- Input Area --- */
+.task-input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+#taskInput {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 50px;
+    border: none;
+    background: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#taskInput:focus {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+#addTaskBtn {
+    padding: 12px 25px;
+    border-radius: 50px;
+    border: none;
+    background: #ffffff;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+#addTaskBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* --- Task List --- */
+.task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}

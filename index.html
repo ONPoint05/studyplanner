@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Planner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="logo">StudySpace</div>
+        <ul class="nav-links">
+            <li><a href="#">Planner</a></li>
+            <li><a href="#">Focus</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </nav>
+
+    <main class="glass-dashboard">
+        <h2 class="dashboard-title">Today's Focus</h2>
+        
+        <div class="task-input-area">
+            <input type="text" id="taskInput" placeholder="What are we studying today?">
+            <button id="addTaskBtn">Add</button>
+        </div>
+
+        <ul id="taskList" class="task-list">
+            </ul>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

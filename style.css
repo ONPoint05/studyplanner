@@ -326,10 +326,53 @@ body {
 .text-danger {
     color: #ff6b6b; /* Red color for the remove action */
 }
-/* --- App Wrapper & Side Panel Layout --- */
+/* ========================================= */
+/* --- PRIORITY FEATURE (From Main) --- */
+/* ========================================= */
+.priority-dropdown {
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.6);
+    font-size: 15px;
+    color: #4a4a4a;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.priority-dropdown:focus {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.task-item {
+    border-left: 5px solid transparent; 
+}
+
+.priority-low { border-left-color: #4dabf7; }    
+.priority-medium { border-left-color: #fab005; } 
+.priority-high { border-left-color: #fa5252; }   
+
+.priority-badge {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-low { background: rgba(77, 171, 247, 0.2); color: #228be6; }
+.badge-medium { background: rgba(250, 176, 5, 0.2); color: #e67700; }
+.badge-high { background: rgba(250, 82, 82, 0.2); color: #e03131; }
+
+/* ========================================= */
+/* --- SIDE PANEL FEATURE (Current Branch) --- */
+/* ========================================= */
 .app-wrapper {
     position: relative; 
-    max-width: 600px; /* Should match your main dashboard max-width */
+    max-width: 600px; 
     margin: 0 auto; 
 }
 
@@ -354,7 +397,6 @@ body {
 
 .side-title { color: #4a4a4a; margin-bottom: 15px; font-size: 1.2rem; }
 
-/* --- Concentric Rings --- */
 .concentric-container { margin-bottom: 25px; }
 
 .concentric-rings circle {
@@ -375,7 +417,6 @@ body {
 .ring-medium { stroke: #fab005; }
 .ring-high { stroke: #fa5252; }
 
-/* --- Side Filter Buttons & List --- */
 .side-filters {
     display: flex;
     gap: 10px;
@@ -403,5 +444,4 @@ body {
 .side-list { width: 100%; }
 .side-list .task-item { padding: 10px 15px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
 .side-list .task-text { font-size: 0.9rem; flex: 1; }
-/* Smaller checkbox for the side panel */
 .side-list .task-checkbox { width: 16px; height: 16px; margin: 0; }

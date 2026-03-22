@@ -2,39 +2,97 @@
 const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskList = document.getElementById('taskList');
-// New Progress Elements
+const prioritySelect = document.getElementById('prioritySelect');
+
 const progressFill = document.querySelector('.progress-ring__fill');
 const progressPercent = document.getElementById('progress-percent');
 const progressStat = document.getElementById('progress-stat');
 
+const sideTaskList = document.getElementById('sideTaskList');
+const filterBtns = document.querySelectorAll('.filter-btn');
+
 // 2. State Management
 let tasks = JSON.parse(localStorage.getItem('studyTasks')) || [];
+let currentFilter = 'high'; 
 
-// 3. Progress Bar Logic
-const radius = 50; // Matches 'r' in HTML
-const circumference = 2 * Math.PI * radius; // C = 2πr (approx 314)
+// 3. Main Progress Bar Logic (Weighted)
+const radius = 50; 
+const circumference = 2 * Math.PI * radius; 
 progressFill.style.strokeDasharray = `${circumference} ${circumference}`;
 
 function updateProgressBar() {
-    const total = tasks.length;
-    const completed = tasks.filter(t => t.completed).length;
-    const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+    const weights = { low: 1, medium: 2, high: 3 };
+
+    const totalPoints = tasks.reduce((sum, task) => sum + weights[task.priority || 'medium'], 0);
+    const earnedPoints = tasks.reduce((sum, task) => task.completed ? sum + weights[task.priority || 'medium'] : sum, 0);
+
+    const percentage = totalPoints === 0 ? 0 : Math.round((earnedPoints / totalPoints) * 100);
     
-    // Calculate how much of the "314px" string to hide
     const offset = circumference - (percentage / 100 * circumference);
     progressFill.style.strokeDashoffset = offset;
     
-    // Update Text
     progressPercent.innerText = `${percentage}%`;
-    progressStat.innerText = `${completed} of ${total} tasks`;
+    const completedTasks = tasks.filter(t => t.completed).length;
+    progressStat.innerText = `${completedTasks} of ${tasks.length} tasks`;
 }
 
-// 4. The Render Function
+// 4. Side Panel Logic (Concentric Rings)
+const rings = {
+    low: { el: document.querySelector('.ring-low'), radius: 30 },
+    medium: { el: document.querySelector('.ring-medium'), radius: 50 },
+    high: { el: document.querySelector('.ring-high'), radius: 70 }
+};
+
+for (const key in rings) {
+    const ring = rings[key];
+    ring.circumference = 2 * Math.PI * ring.radius;
+    ring.el.style.strokeDasharray = `${ring.circumference} ${ring.circumference}`;
+    ring.el.style.strokeDashoffset = ring.circumference;
+}
+
+function updateConcentricRings() {
+    ['low', 'medium', 'high'].forEach(priorityLevel => {
+        const priorityTasks = tasks.filter(t => (t.priority || 'medium') === priorityLevel);
+        const total = priorityTasks.length;
+        const completed = priorityTasks.filter(t => t.completed).length;
+        
+        const percentage = total === 0 ? 0 : (completed / total);
+        const ring = rings[priorityLevel];
+        ring.el.style.strokeDashoffset = ring.circumference - (percentage * ring.circumference);
+    });
+}
+
+function renderSidePanel() {
+    sideTaskList.innerHTML = '';
+    const filteredTasks = tasks.filter(t => (t.priority || 'medium') === currentFilter);
+    
+    filteredTasks.forEach(task => {
+        const originalIndex = tasks.indexOf(task);
+        const li = document.createElement('li');
+        li.classList.add('task-item', `priority-${currentFilter}`);
+        const isDone = task.completed ? 'completed' : '';
+        const isChecked = task.completed ? 'checked' : '';
+        
+        li.innerHTML = `
+            <input type="checkbox" class="task-checkbox" onchange="toggleTask(${originalIndex})" ${isChecked}>
+            <span class="task-text ${isDone}" style="opacity: ${task.completed ? '0.6' : '1'}">${task.text}</span>
+        `;
+        sideTaskList.appendChild(li);
+    });
+    
+    updateConcentricRings();
+}
+
+// 5. Main Render Function
 function renderTasks() {
     taskList.innerHTML = '';
     tasks.forEach(function(task, index) {
         const li = document.createElement('li');
         li.classList.add('task-item');
+        
+        const taskPriority = task.priority || 'medium'; 
+        li.classList.add(`priority-${taskPriority}`); 
+
         const isDone = task.completed ? 'completed' : '';
         const isChecked = task.completed ? 'checked' : '';
 
@@ -42,33 +100,34 @@ function renderTasks() {
             <div class="task-content">
                 <input type="checkbox" class="task-checkbox" onchange="toggleTask(${index})" ${isChecked}>
                 <span class="task-text ${isDone}">${task.text}</span>
+                <span class="priority-badge badge-${taskPriority}">${taskPriority}</span>
             </div>
             <button class="delete-btn" onclick="deleteTask(${index})">×</button>
         `;
         taskList.appendChild(li);
     });
     
-    // Always update progress when rendering
     updateProgressBar();
 }
 
-// 5. Add Task Logic
+// 6. Core Functions
 function addTask() {
     const textValue = taskInput.value.trim();
     if (textValue === '') return;
-    tasks.push({ text: textValue, completed: false });
+    const priorityValue = prioritySelect.value;
+
+    tasks.push({ text: textValue, completed: false, priority: priorityValue });
     saveAndRender();
     taskInput.value = '';
+    prioritySelect.value = 'medium'; 
 }
 
-// Helper to save and refresh
 function saveAndRender() {
     localStorage.setItem('studyTasks', JSON.stringify(tasks));
     renderTasks();
-    renderSidePanel(); // Also update the side panel whenever tasks change
+    renderSidePanel(); // Updates side panel too!
 }
 
-// 6. Global Actions
 window.deleteTask = function(index) {
     tasks.splice(index, 1);
     saveAndRender();
@@ -83,137 +142,6 @@ window.toggleTask = function(index) {
 addTaskBtn.addEventListener('click', addTask);
 taskInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addTask(); });
 
-// 8. Initial Load
-renderTasks();
-
-
-// --- Custom Background & Dropdown Logic ---
-const bgMenuBtn = document.getElementById('bgMenuBtn');
-const bgDropdown = document.getElementById('bgDropdown');
-const triggerUpload = document.getElementById('triggerUpload');
-const removeBgBtn = document.getElementById('removeBgBtn');
-const bgUpload = document.getElementById('bgUpload');
-
-// 1. Load saved background on startup
-const savedBg = localStorage.getItem('studyBg');
-if (savedBg) {
-    document.body.style.backgroundImage = `url(${savedBg})`;
-    document.body.style.animation = 'none'; 
-}
-
-// 2. Toggle the dropdown menu visibility
-bgMenuBtn.addEventListener('click', function() {
-    bgDropdown.classList.toggle('show');
-});
-
-// 3. Close the menu if the user clicks anywhere else on the page
-document.addEventListener('click', function(event) {
-    // If the click is NOT inside the button AND NOT inside the dropdown, close it
-    if (!bgMenuBtn.contains(event.target) && !bgDropdown.contains(event.target)) {
-        bgDropdown.classList.remove('show');
-    }
-});
-
-// 4. Handle "Upload Image" click
-triggerUpload.addEventListener('click', function() {
-    bgUpload.click();
-    bgDropdown.classList.remove('show'); // Close menu after clicking
-});
-
-// 5. Handle "Remove Image" click
-removeBgBtn.addEventListener('click', function() {
-    // Clear memory
-    localStorage.removeItem('studyBg');
-    
-    // Reset CSS to default gradient
-    document.body.style.backgroundImage = 'none';
-    document.body.style.animation = 'gradientBG 15s ease-in infinite';
-    
-    // Close menu
-    bgDropdown.classList.remove('show');
-});
-
-// 6. Handle the actual file upload (Same as before)
-bgUpload.addEventListener('change', function() {
-    const file = this.files[0];
-    if (!file) return;
-
-    if (file.size > 4000000) {
-        alert("This image is too large! Please choose a file under 4MB.");
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const imageUrl = e.target.result;
-        document.body.style.backgroundImage = `url(${imageUrl})`;
-        document.body.style.animation = 'none'; 
-        localStorage.setItem('studyBg', imageUrl);
-    };
-    reader.readAsDataURL(file);
-});
-// --- NEW: Priority Overview Side Panel Logic ---
-const sideTaskList = document.getElementById('sideTaskList');
-const filterBtns = document.querySelectorAll('.filter-btn');
-
-// Setup the 3 Rings
-const rings = {
-    low: { el: document.querySelector('.ring-low'), radius: 30 },
-    medium: { el: document.querySelector('.ring-medium'), radius: 50 },
-    high: { el: document.querySelector('.ring-high'), radius: 70 }
-};
-
-// Initialize SVG lengths
-for (const key in rings) {
-    const ring = rings[key];
-    ring.circumference = 2 * Math.PI * ring.radius;
-    ring.el.style.strokeDasharray = `${ring.circumference} ${ring.circumference}`;
-    ring.el.style.strokeDashoffset = ring.circumference;
-}
-
-let currentFilter = 'high'; // Default view
-
-function updateConcentricRings() {
-    ['low', 'medium', 'high'].forEach(priorityLevel => {
-        const priorityTasks = tasks.filter(t => (t.priority || 'medium') === priorityLevel);
-        const total = priorityTasks.length;
-        const completed = priorityTasks.filter(t => t.completed).length;
-        
-        const percentage = total === 0 ? 0 : (completed / total);
-        
-        const ring = rings[priorityLevel];
-        const offset = ring.circumference - (percentage * ring.circumference);
-        ring.el.style.strokeDashoffset = offset;
-    });
-}
-
-function renderSidePanel() {
-    sideTaskList.innerHTML = '';
-    
-    // Filter tasks based on the active button state
-    const filteredTasks = tasks.filter(t => (t.priority || 'medium') === currentFilter);
-    
-    filteredTasks.forEach((task, index) => {
-        // Find the original index of the task in the main array so toggling works properly
-        const originalIndex = tasks.indexOf(task);
-        
-        const li = document.createElement('li');
-        li.classList.add('task-item', `priority-${currentFilter}`);
-        const isDone = task.completed ? 'completed' : '';
-        const isChecked = task.completed ? 'checked' : '';
-        
-        // Added the checkbox so you can check tasks off right from the side panel
-        li.innerHTML = `
-            <input type="checkbox" class="task-checkbox" onchange="toggleTask(${originalIndex})" ${isChecked}>
-            <span class="task-text ${isDone}" style="opacity: ${task.completed ? '0.6' : '1'}">${task.text}</span>
-        `;
-        sideTaskList.appendChild(li);
-    });
-    
-    updateConcentricRings();
-}
-
-// Filter Button Click Events
 filterBtns.forEach(btn => {
     btn.addEventListener('click', function() {
         filterBtns.forEach(b => b.classList.remove('active'));
@@ -223,5 +151,50 @@ filterBtns.forEach(btn => {
     });
 });
 
-// INITIAL CALL: Trigger the side panel to render when the page loads
+// 8. Initial Load
+renderTasks();
 renderSidePanel();
+
+// --- Background Logic ---
+const bgMenuBtn = document.getElementById('bgMenuBtn');
+const bgDropdown = document.getElementById('bgDropdown');
+const triggerUpload = document.getElementById('triggerUpload');
+const removeBgBtn = document.getElementById('removeBgBtn');
+const bgUpload = document.getElementById('bgUpload');
+
+const savedBg = localStorage.getItem('studyBg');
+if (savedBg) {
+    document.body.style.backgroundImage = `url(${savedBg})`;
+    document.body.style.animation = 'none'; 
+}
+
+bgMenuBtn.addEventListener('click', () => bgDropdown.classList.toggle('show'));
+
+document.addEventListener('click', (event) => {
+    if (!bgMenuBtn.contains(event.target) && !bgDropdown.contains(event.target)) {
+        bgDropdown.classList.remove('show');
+    }
+});
+
+triggerUpload.addEventListener('click', () => { bgUpload.click(); bgDropdown.classList.remove('show'); });
+
+removeBgBtn.addEventListener('click', () => {
+    localStorage.removeItem('studyBg');
+    document.body.style.backgroundImage = 'none';
+    document.body.style.animation = 'gradientBG 15s ease-in infinite';
+    bgDropdown.classList.remove('show');
+});
+
+bgUpload.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    if (file.size > 4000000) return alert("File under 4MB please.");
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.body.style.backgroundImage = `url(${e.target.result})`;
+        document.body.style.animation = 'none'; 
+        localStorage.setItem('studyBg', e.target.result);
+    };
+    reader.readAsDataURL(file);
+});

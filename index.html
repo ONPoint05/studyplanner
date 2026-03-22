@@ -11,8 +11,24 @@
         <div class="logo">StudySpace</div>
         <ul class="nav-links">
             <li><a href="#">Planner</a></li>
-            <li><a href="#">Focus</a></li>
-            <li><a href="#">Settings</a></li>
+            
+            <li class="bg-control">
+                <button id="bgMenuBtn" class="upload-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Background
+                </button>
+                
+                <div id="bgDropdown" class="dropdown-menu">
+                    <button id="triggerUpload" class="dropdown-item">Upload Image</button>
+                    <button id="removeBgBtn" class="dropdown-item text-danger">Remove Image</button>
+                </div>
+                
+                <input type="file" id="bgUpload" accept="image/*" style="display: none;">
+            </li>
         </ul>
     </nav>
 

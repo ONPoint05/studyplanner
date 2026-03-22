@@ -84,3 +84,70 @@ taskInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addTask()
 
 // 8. Initial Load
 renderTasks();
+
+
+// --- Custom Background & Dropdown Logic ---
+const bgMenuBtn = document.getElementById('bgMenuBtn');
+const bgDropdown = document.getElementById('bgDropdown');
+const triggerUpload = document.getElementById('triggerUpload');
+const removeBgBtn = document.getElementById('removeBgBtn');
+const bgUpload = document.getElementById('bgUpload');
+
+// 1. Load saved background on startup
+const savedBg = localStorage.getItem('studyBg');
+if (savedBg) {
+    document.body.style.backgroundImage = `url(${savedBg})`;
+    document.body.style.animation = 'none'; 
+}
+
+// 2. Toggle the dropdown menu visibility
+bgMenuBtn.addEventListener('click', function() {
+    bgDropdown.classList.toggle('show');
+});
+
+// 3. Close the menu if the user clicks anywhere else on the page
+document.addEventListener('click', function(event) {
+    // If the click is NOT inside the button AND NOT inside the dropdown, close it
+    if (!bgMenuBtn.contains(event.target) && !bgDropdown.contains(event.target)) {
+        bgDropdown.classList.remove('show');
+    }
+});
+
+// 4. Handle "Upload Image" click
+triggerUpload.addEventListener('click', function() {
+    bgUpload.click();
+    bgDropdown.classList.remove('show'); // Close menu after clicking
+});
+
+// 5. Handle "Remove Image" click
+removeBgBtn.addEventListener('click', function() {
+    // Clear memory
+    localStorage.removeItem('studyBg');
+    
+    // Reset CSS to default gradient
+    document.body.style.backgroundImage = 'none';
+    document.body.style.animation = 'gradientBG 15s ease-in infinite';
+    
+    // Close menu
+    bgDropdown.classList.remove('show');
+});
+
+// 6. Handle the actual file upload (Same as before)
+bgUpload.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+
+    if (file.size > 4000000) {
+        alert("This image is too large! Please choose a file under 4MB.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageUrl = e.target.result;
+        document.body.style.backgroundImage = `url(${imageUrl})`;
+        document.body.style.animation = 'none'; 
+        localStorage.setItem('studyBg', imageUrl);
+    };
+    reader.readAsDataURL(file);
+});

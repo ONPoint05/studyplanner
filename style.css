@@ -326,3 +326,44 @@ body {
 .text-danger {
     color: #ff6b6b; /* Red color for the remove action */
 }
+/* --- Priority Dropdown --- */
+.priority-dropdown {
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.6);
+    font-size: 15px;
+    color: #4a4a4a;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.priority-dropdown:focus {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+/* --- Task Priority Colors --- */
+.task-item {
+    border-left: 5px solid transparent; /* Prepares the border */
+}
+
+/* JavaScript will apply one of these classes to the <li> */
+.priority-low { border-left-color: #4dabf7; }    /* Blue */
+.priority-medium { border-left-color: #fab005; } /* Yellow */
+.priority-high { border-left-color: #fa5252; }   /* Red */
+
+/* Small priority badge next to the text */
+.priority-badge {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-low { background: rgba(77, 171, 247, 0.2); color: #228be6; }
+.badge-medium { background: rgba(250, 176, 5, 0.2); color: #e67700; }
+.badge-high { background: rgba(250, 82, 82, 0.2); color: #e03131; }

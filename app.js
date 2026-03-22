@@ -2,6 +2,7 @@
 const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskList = document.getElementById('taskList');
+const prioritySelect = document.getElementById('prioritySelect');
 // New Progress Elements
 const progressFill = document.querySelector('.progress-ring__fill');
 const progressPercent = document.getElementById('progress-percent');
@@ -35,13 +36,22 @@ function renderTasks() {
     tasks.forEach(function(task, index) {
         const li = document.createElement('li');
         li.classList.add('task-item');
+
+        // --- NEW: Priority Logic & Backwards Compatibility ---
+        const taskPriority = task.priority || 'medium'; 
+        
+        // Add the color border class (e.g., 'priority-high')
+        li.classList.add(`priority-${taskPriority}`); 
+
         const isDone = task.completed ? 'completed' : '';
         const isChecked = task.completed ? 'checked' : '';
 
+        // --- NEW: Injected the badge span inside the task-content div ---
         li.innerHTML = `
             <div class="task-content">
                 <input type="checkbox" class="task-checkbox" onchange="toggleTask(${index})" ${isChecked}>
                 <span class="task-text ${isDone}">${task.text}</span>
+                <span class="priority-badge badge-${taskPriority}">${taskPriority}</span>
             </div>
             <button class="delete-btn" onclick="deleteTask(${index})">×</button>
         `;
@@ -56,9 +66,20 @@ function renderTasks() {
 function addTask() {
     const textValue = taskInput.value.trim();
     if (textValue === '') return;
-    tasks.push({ text: textValue, completed: false });
+
+    // Grab the value from the dropdown ("low", "medium", or "high")
+    const priorityValue = prioritySelect.value;
+
+    // Push the new property into our object
+    tasks.push({ 
+        text: textValue, 
+        completed: false,
+        priority: priorityValue // NEW: Saving the priority
+    });
+
     saveAndRender();
     taskInput.value = '';
+    prioritySelect.value = 'medium'; // Reset dropdown to default
 }
 
 // Helper to save and refresh

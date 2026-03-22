@@ -47,8 +47,13 @@
         <h2 class="dashboard-title">Today's Focus</h2>
     </header>
     
-    <div class="task-input-area">
-        <input type="text" id="taskInput" placeholder="What are we studying today?">
+   <div class="task-input-area">
+     <input type="text" id="taskInput" placeholder="What are we studying today?">
+        <select id="prioritySelect" class="priority-dropdown">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+        </select>
         <button id="addTaskBtn">Add</button>
     </div>
     <ul id="taskList" class="task-list"></ul>

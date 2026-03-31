@@ -30,6 +30,22 @@
     </nav>
 
     <div class="app-wrapper">
+
+        <div class="pomodoro-widget glass-panel">
+                <div class="pomodoro-modes">
+                    <button class="mode-btn active" data-mode="work">Focus</button>
+                    <button class="mode-btn" data-mode="break">Break</button>
+                </div>
+                
+                <div class="pomodoro-time" id="timeDisplay">25:00</div>
+                
+                <div class="pomodoro-controls">
+                    <button id="startTimerBtn" class="control-btn primary">Start</button>
+                    <button id="pauseTimerBtn" class="control-btn">Pause</button>
+                    <button id="resetTimerBtn" class="control-btn">Reset</button>
+                </div>
+            </div>
+        
         <main class="glass-dashboard">
             <header class="dashboard-header">
                 <h2>Today's Focus</h2>
@@ -44,6 +60,7 @@
                     </div>
                 </div>
             </header>
+            
 
             <div class="task-input-area">
                 <input type="text" id="taskInput" placeholder="What are we studying today?">

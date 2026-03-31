@@ -219,3 +219,83 @@ bgUpload.addEventListener('change', function() {
     };
     reader.readAsDataURL(file);
 });
+
+// ==========================================
+// --- POMODORO TIMER LOGIC ---
+// ==========================================
+
+// 1. DOM Elements
+const timeDisplay = document.getElementById('timeDisplay');
+const startTimerBtn = document.getElementById('startTimerBtn');
+const pauseTimerBtn = document.getElementById('pauseTimerBtn');
+const resetTimerBtn = document.getElementById('resetTimerBtn');
+const modeBtns = document.querySelectorAll('.mode-btn');
+
+// 2. Timer State
+let timerId = null; // Holds the interval ID so we can stop it later
+let timeLeft = 25 * 60; // Start with 25 minutes (in seconds)
+let isWorkMode = true; // Tracks if we are focusing or resting
+
+// 3. Format and update the display
+function updateTimeDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    
+    // padStart ensures "9" becomes "09"
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+    
+    timeDisplay.textContent = `${formattedMinutes}:${formattedSeconds}`;
+}
+
+// 4. Timer Controls
+function startTimer() {
+    // Prevent multiple clicks from starting multiple fast-forwarding timers
+    if (timerId !== null) return; 
+
+    timerId = setInterval(() => {
+        timeLeft--;
+        updateTimeDisplay();
+
+        if (timeLeft <= 0) {
+            clearInterval(timerId);
+            timerId = null;
+            alert(isWorkMode ? 'Focus session complete! Time for a break.' : 'Break is over! Let\'s get back to work.');
+            resetTimer(); // Reset for the next round
+        }
+    }, 1000); // 1000 milliseconds = 1 second
+}
+
+function pauseTimer() {
+    clearInterval(timerId);
+    timerId = null;
+}
+
+function resetTimer() {
+    pauseTimer(); // Stop it if it's running
+    timeLeft = isWorkMode ? 25 * 60 : 5 * 60; // 25 mins for work, 5 mins for break
+    updateTimeDisplay();
+}
+
+// 5. Button Event Listeners
+startTimerBtn.addEventListener('click', startTimer);
+pauseTimerBtn.addEventListener('click', pauseTimer);
+resetTimerBtn.addEventListener('click', resetTimer);
+
+// 6. Mode Switcher (Focus vs Break)
+modeBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Update active classes
+        modeBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Update state based on the button clicked
+        isWorkMode = this.getAttribute('data-mode') === 'work';
+        
+        // Reset the timer to the new mode's default time
+        resetTimer();
+    });
+});
+
+// Initialize the display when the app loads
+updateTimeDisplay();

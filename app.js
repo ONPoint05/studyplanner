@@ -110,21 +110,32 @@ function renderTasks() {
     tasks.forEach(function(task, index) {
         const li = document.createElement('li');
         li.classList.add('task-item');
-        
         const taskPriority = task.priority || 'medium'; 
         li.classList.add(`priority-${taskPriority}`); 
+        
+        // NEW: Make it draggable and assign its array index
+        li.setAttribute('draggable', 'true');
+        li.setAttribute('data-index', index);
 
         const isDone = task.completed ? 'completed' : '';
         const isChecked = task.completed ? 'checked' : '';
 
+        // NEW: Added the drag-handle SVG at the start of the task-content
         li.innerHTML = `
             <div class="task-content">
+                <div class="drag-handle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></svg>
+                </div>
                 <input type="checkbox" class="task-checkbox" onchange="toggleTask(${index})" ${isChecked}>
                 <span class="task-text ${isDone}">${task.text}</span>
                 <span class="priority-badge badge-${taskPriority}">${taskPriority}</span>
             </div>
             <button class="delete-btn" onclick="deleteTask(${index})">×</button>
         `;
+        
+        // NEW: Attach drag event listeners to this specific list item
+        addDragEvents(li);
+
         taskList.appendChild(li);
     });
     
@@ -299,3 +310,64 @@ modeBtns.forEach(btn => {
 
 // Initialize the display when the app loads
 updateTimeDisplay();
+
+// ==========================================
+// --- DRAG AND DROP LOGIC ---
+// ==========================================
+
+let dragStartIndex; // Remembers which item we picked up
+
+function addDragEvents(item) {
+    item.addEventListener('dragstart', dragStart);
+    item.addEventListener('dragover', dragOver);
+    item.addEventListener('drop', dragDrop);
+    item.addEventListener('dragenter', dragEnter);
+    item.addEventListener('dragleave', dragLeave);
+    item.addEventListener('dragend', dragEnd);
+}
+
+function dragStart(e) {
+    // Save the index of the item we just picked up
+    dragStartIndex = +this.getAttribute('data-index');
+    // Add a CSS class so we can make it transparent while dragging
+    this.classList.add('dragging');
+    // Required for Firefox compatibility
+    e.dataTransfer.effectAllowed = 'move'; 
+}
+
+function dragOver(e) {
+    e.preventDefault(); // By default, dropping is disabled. This turns it on.
+    this.classList.add('drag-over'); // Adds a hover effect to the target
+}
+
+function dragEnter(e) {
+    e.preventDefault();
+}
+
+function dragLeave() {
+    this.classList.remove('drag-over'); // Remove hover effect when we leave
+}
+
+function dragEnd() {
+    this.classList.remove('dragging'); // Clean up when we drop it
+}
+
+function dragDrop() {
+    this.classList.remove('drag-over');
+    
+    // Find out where we dropped it
+    const dragEndIndex = +this.getAttribute('data-index');
+    
+    // Reorder the array!
+    swapTasks(dragStartIndex, dragEndIndex);
+}
+
+// The function that actually alters your data
+function swapTasks(fromIndex, toIndex) {
+    // 1. Remove the item from its original spot
+    const itemToMove = tasks.splice(fromIndex, 1)[0];
+    // 2. Insert it into the new spot
+    tasks.splice(toIndex, 0, itemToMove);
+    // 3. Save to localStorage and redraw the screen!
+    saveAndRender();
+}

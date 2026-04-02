@@ -1,3 +1,25 @@
+/* ========================================= */
+/* --- GLOBAL COLOR PALETTE (60-30-10) --- */
+/* ========================================= */
+:root {
+    /* The Full Palette */
+    --color-1: #051f20;
+    --color-2: #0b2b26;
+    --color-3: #163832;
+    --color-4: #235347;
+    --color-5: #8eb69b;
+    --color-6: #daf1de;
+
+    /* Glassmorphism Surface Architecture */
+    --glass-panel: rgba(22, 56, 50, 0.7); 
+    --glass-item: rgba(35, 83, 71, 0.5);
+    --glass-border: rgba(218, 241, 222, 0.15); 
+
+    /* Text & Accents */
+    --text-primary: #daf1de;
+    --text-secondary: #8eb69b;
+}
+
 /* --- Global Styles & Animated Background --- */
 * {
     margin: 0;
@@ -8,14 +30,21 @@
 
 body {
     min-height: 100vh;
-    /* Soft white/gray animated gradient */
-    background: linear-gradient(-45deg, #fdfbfb, #ebedee, #f5f7fa, #c3cfe2);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease-in infinite;
-    color: #333;
-    /* --- NEW: Image handling --- */
-    background-size: cover !important;
-    background-position: center !important;
+    /* The 6-Color Sweeping Gradient */
+    background: linear-gradient(
+        -45deg, 
+        var(--color-1), 
+        var(--color-2), 
+        var(--color-3), 
+        var(--color-4), 
+        var(--color-5), 
+        var(--color-6),
+        var(--color-1) /* Loops back to dark for a smooth animation reset */
+    );
+    background-size: 600% 600%;
+    animation: gradientBG 25s ease infinite;
+    color: var(--text-primary);
+    
     background-attachment: fixed !important;
 }
 
@@ -31,10 +60,10 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 40px;
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    background: var(--glass-panel);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -43,7 +72,7 @@ body {
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #4a4a4a;
+    color: var(--text-primary);
 }
 
 .nav-links {
@@ -54,32 +83,32 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: #4a4a4a;
+    color: var(--text-primary);
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #7b8a97;
+    color: var(--text-secondary);
+}
+
+/* --- App Wrapper & Layout --- */
+.app-wrapper {
+    position: relative; 
+    max-width: 600px; 
+    margin: 0 auto; 
 }
 
 /* --- Main Glass Dashboard --- */
 .glass-dashboard {
-    max-width: 600px;
     margin: 60px auto;
     padding: 30px;
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--glass-panel);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-title {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #4a4a4a;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* --- Input Area --- */
@@ -93,136 +122,139 @@ body {
     flex: 1;
     padding: 12px 20px;
     border-radius: 50px;
-    border: none;
-    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--glass-border);
+    background: var(--glass-item);
+    color: var(--text-primary);
     font-size: 16px;
     outline: none;
     transition: all 0.3s ease;
 }
 
+#taskInput::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
 #taskInput:focus {
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+    background: rgba(35, 83, 71, 0.8);
+    box-shadow: 0 0 0 2px var(--color-6);
 }
 
 #addTaskBtn {
     padding: 12px 25px;
     border-radius: 50px;
     border: none;
-    background: #ffffff;
-    color: #333;
+    background: var(--color-6);
+    color: var(--color-1);
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 #addTaskBtn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    background: #fff;
+    box-shadow: 0 6px 12px rgba(218, 241, 222, 0.3);
 }
 
-/* --- Task List --- */
+/* --- Task List & Items --- */
 .task-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
-/* --- Dynamic Task Items --- */
+
 .task-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--glass-item);
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--glass-border);
+    border-left: 5px solid transparent; 
     transition: all 0.3s ease;
 }
 
 .task-item:hover {
-    transform: translateX(5px); /* Smooth slide to the right */
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transform: translateX(5px);
+    background: rgba(35, 83, 71, 0.7);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.task-content {
+    display: flex;
+    align-items: center;
+    flex: 1; 
 }
 
 .task-text {
-    color: #4a4a4a;
+    color: var(--text-primary);
     font-weight: 500;
-    cursor: pointer; /* Makes it look clickable */
     transition: color 0.3s ease;
 }
 
-/* This is the class we will add/remove with JavaScript */
 .task-text.completed {
     text-decoration: line-through;
-    color: #a0a0a0; /* Fades the text out slightly */
+    color: var(--text-secondary); 
+    opacity: 0.5;
+}
+
+/* --- Custom Checkbox --- */
+.task-checkbox {
+    appearance: none; 
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 6px; 
+    margin-right: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.task-checkbox:checked {
+    background: var(--color-6); 
+    border-color: var(--color-6);
+}
+
+.task-checkbox:checked::after {
+    content: '✔';
+    color: var(--color-1);
+    font-size: 14px;
+    font-weight: bold;
 }
 
 /* --- Delete Button --- */
 .delete-btn {
     background: none;
     border: none;
-    color: #ff6b6b;
+    color: #ff6b6b; 
     font-size: 24px;
     cursor: pointer;
     transition: transform 0.2s ease;
-    line-height: 1; /* Keeps the X perfectly centered */
+    line-height: 1; 
 }
 
-.delete-btn:hover {
-    transform: scale(1.2); /* Pops slightly when hovered */
-}
-/* --- Checkbox & Layout Updates --- */
-.task-content {
-    display: flex;
-    align-items: center;
-    flex: 1; /* Pushes the delete button all the way to the right */
-}
+.delete-btn:hover { transform: scale(1.2); }
 
-/* The Custom Checkbox */
-.task-checkbox {
-    appearance: none; /* This wipes out the ugly default browser box! */
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    border: 2px solid rgba(100, 100, 100, 0.3);
-    border-radius: 6px; /* Soft, modern corners */
-    margin-right: 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.5);
-    transition: all 0.2s ease;
-}
-
-/* When the checkbox is clicked/true */
-.task-checkbox:checked {
-    background: #4caf50; /* A crisp, satisfying green */
-    border-color: #4caf50;
-}
-
-/* Drawing the checkmark icon using CSS */
-.task-checkbox:checked::after {
-    content: '✔';
-    color: white;
-    font-size: 14px;
-}
-
-/* Update task-text (Remove the cursor: pointer since we don't click text anymore) */
-.task-text {
-    color: #4a4a4a;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-/* --- Progress Bar Layout --- */
+/* --- Main Progress Bar --- */
 .dashboard-header {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 30px; 
+}
+
+.dashboard-header h2 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
 }
 
 .progress-container {
@@ -234,23 +266,22 @@ body {
     height: 120px;
 }
 
-/* Base rules for the main circles */
 .progress-ring circle {
     fill: transparent;
     stroke-width: 10;
 }
 
 .progress-ring__bg {
-    stroke: rgba(0, 0, 0, 0.1); /* A soft grey track */
+    stroke: rgba(255, 255, 255, 0.05); 
 }
 
 .progress-ring__fill {
-    stroke: #4caf50; /* Green */
+    stroke: var(--color-6);
     stroke-linecap: round;
     transition: stroke-dashoffset 0.4s ease; 
     transform: rotate(-90deg); 
     transform-origin: 50% 50%;
-    filter: drop-shadow(0 0 4px rgba(76, 175, 80, 0.4));
+    filter: drop-shadow(0 0 6px rgba(218, 241, 222, 0.3));
 }
 
 .progress-text {
@@ -263,108 +294,38 @@ body {
 #progress-percent {
     font-size: 1.6rem;
     font-weight: bold;
-    color: #4caf50;
+    color: var(--text-primary);
     line-height: 1.2;
 }
 
 #progress-stat {
     font-size: 0.75rem;
-    color: #888;
-}
-/* --- Background Dropdown Menu --- */
-.bg-control {
-    position: relative; /* Keeps the dropdown attached to this specific li */
+    color: var(--text-secondary);
 }
 
-.upload-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 8px;
-    color: #4a4a4a;
-    font-weight: 500;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.upload-btn:hover {
-    background: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 130%; /* Pushes it just below the button */
-    right: 0;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    min-width: 160px;
-    overflow: hidden;
-    
-    /* Hide it by default with animation */
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-10px);
-    transition: all 0.2s ease;
-}
-
-/* JavaScript will add this class to reveal the menu */
-.dropdown-menu.show {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-}
-
-.dropdown-item {
-    padding: 12px 16px;
-    border: none;
-    background: none;
-    text-align: left;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.dropdown-item:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-.text-danger {
-    color: #ff6b6b; /* Red color for the remove action */
-}
-/* ========================================= */
-/* --- PRIORITY FEATURE (From Main) --- */
-/* ========================================= */
+/* --- Priority Feature & Tags --- */
 .priority-dropdown {
     padding: 12px 15px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--glass-border);
+    background: var(--glass-item);
     font-size: 15px;
-    color: #4a4a4a;
+    color: var(--text-primary);
     outline: none;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
+.priority-dropdown option {
+    background: var(--color-2);
+    color: var(--text-primary);
+}
+
 .priority-dropdown:focus {
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 0 2px var(--text-secondary);
 }
 
-.task-item {
-    border-left: 5px solid transparent; 
-}
-
+/* Muted Semantic Priority Colors for Dark Theme */
 .priority-low { border-left-color: #4dabf7; }    
 .priority-medium { border-left-color: #fab005; } 
 .priority-high { border-left-color: #fa5252; }   
@@ -378,19 +339,11 @@ body {
     text-transform: uppercase;
 }
 
-.badge-low { background: rgba(77, 171, 247, 0.2); color: #228be6; }
-.badge-medium { background: rgba(250, 176, 5, 0.2); color: #e67700; }
-.badge-high { background: rgba(250, 82, 82, 0.2); color: #e03131; }
+.badge-low { background: rgba(77, 171, 247, 0.15); color: #74c0fc; }
+.badge-medium { background: rgba(250, 176, 5, 0.15); color: #ffd43b; }
+.badge-high { background: rgba(250, 82, 82, 0.15); color: #ff8787; }
 
-/* ========================================= */
-/* --- SIDE PANEL FEATURE (Current Branch) --- */
-/* ========================================= */
-.app-wrapper {
-    position: relative; 
-    max-width: 600px; 
-    margin: 0 auto; 
-}
-
+/* --- Right Side Panel (Priority Overview) --- */
 .glass-side-panel {
     position: absolute;
     left: calc(100% + 30px); 
@@ -398,19 +351,19 @@ body {
     width: 320px;
     padding: 25px;
     
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--glass-panel);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
     
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.side-title { color: #4a4a4a; margin-bottom: 15px; font-size: 1.2rem; }
+.side-title { color: var(--text-primary); margin-bottom: 15px; font-size: 1.2rem; }
 
 .concentric-container { margin-bottom: 25px; }
 
@@ -419,7 +372,7 @@ body {
     stroke-width: 12;
 }
 
-.ring-bg { stroke: rgba(0, 0, 0, 0.15); }
+.ring-bg { stroke: rgba(255, 255, 255, 0.05); }
 
 .ring-fill {
     stroke-linecap: round;
@@ -432,26 +385,25 @@ body {
 .ring-medium { stroke: #fab005; }
 .ring-high { stroke: #fa5252; }
 
-/* --- Side Panel Stats --- */
+/* Side Panel Stats */
 .side-stats {
     display: flex;
     align-items: baseline;
     justify-content: center;
     gap: 8px;
-    margin-top: -10px; /* Pulls it slightly closer to the rings */
+    margin-top: -10px;
     margin-bottom: 20px;
 }
 
 .stat-percent {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #4a4a4a;
     transition: color 0.3s ease;
 }
 
 .stat-count {
     font-size: 0.85rem;
-    color: #888;
+    color: var(--text-secondary);
     font-weight: 500;
 }
 
@@ -466,17 +418,18 @@ body {
     flex: 1;
     padding: 8px 0;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.6);
-    background: rgba(255,255,255,0.3);
-    color: #4a4a4a;
+    border: 1px solid var(--glass-border);
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-secondary);
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .filter-btn.active, .filter-btn:hover {
-    background: rgba(255,255,255,0.9);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    background: var(--color-6);
+    color: var(--color-1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .side-list { width: 100%; }
@@ -484,23 +437,19 @@ body {
 .side-list .task-text { font-size: 0.9rem; flex: 1; }
 .side-list .task-checkbox { width: 16px; height: 16px; margin: 0; }
 
-/* ========================================= */
-/* --- POMODORO TIMER WIDGET --- */
-/* ========================================= */
+/* --- Left Side Panel (Pomodoro Timer) --- */
 .pomodoro-widget {
-    /* Anchoring it as a left side-panel */
     position: absolute;
     right: calc(100% + 30px); 
-    top: 60px; /* Matches the top margin of the other panels */
-    width: 320px; /* Keeps the size identical to the right panel */
+    top: 60px; 
+    width: 320px; 
     
-    /* Upgraded Glassmorphism to match the side panels perfectly */
-    background: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--glass-panel);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
     
     padding: 25px;
     display: flex;
@@ -512,7 +461,7 @@ body {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.3);
     padding: 5px;
     border-radius: 50px;
 }
@@ -523,24 +472,24 @@ body {
     padding: 8px 20px;
     border-radius: 50px;
     font-weight: bold;
-    color: #888;
+    color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .mode-btn.active {
-    background: #fff;
-    color: #4a4a4a;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: var(--color-6);
+    color: var(--color-1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .pomodoro-time {
     font-size: 3.5rem;
     font-weight: bold;
-    color: #4a4a4a;
+    color: var(--text-primary);
     letter-spacing: 2px;
     margin-bottom: 15px;
-    font-variant-numeric: tabular-nums; /* Keeps numbers from jumping around */
+    font-variant-numeric: tabular-nums; 
 }
 
 .pomodoro-controls {
@@ -555,23 +504,87 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s;
-    background: rgba(255, 255, 255, 0.6);
-    color: #4a4a4a;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: var(--glass-item);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
 }
 
 .control-btn:hover {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(218, 241, 222, 0.1);
 }
 
 .control-btn.primary {
-    background: #4caf50;
-    color: white;
+    background: var(--color-6);
+    color: var(--color-1);
     border: none;
 }
 
 .control-btn.primary:hover {
-    background: #43a047;
+    background: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 4px 10px rgba(218, 241, 222, 0.3);
 }
+
+/* --- Background Dropdown Menu --- */
+.bg-control { position: relative; }
+
+.upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--glass-item);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    background: rgba(218, 241, 222, 0.1);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 130%; 
+    right: 0;
+    background: var(--color-3);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.text-danger { color: #ff6b6b; }

@@ -7,6 +7,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="loaderWrapper" class="loader-wrapper">
+        <svg class="tree-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle class="circle-outline" cx="50" cy="50" r="46" />
+            <path class="tree-path" d="M 50 90 L 50 40 M 50 65 L 35 45 M 50 55 L 65 35" />
+            <circle class="leaf leaf1" cx="50" cy="35" r="12" />
+            <circle class="leaf leaf2" cx="32" cy="42" r="9" />
+            <circle class="leaf leaf3" cx="68" cy="32" r="10" />
+        </svg>
+        <p class="loader-text">Growing your workspace...</p>
+    </div>
+
+    <header id="landingPage" class="landing-page">
+        <div class="hero-content glass-panel">
+            <h1 class="hero-title animate-up">Onpoint Planner</h1>
+            <p class="hero-subtitle animate-up delay-1">Your cozy, distraction-free workspace.</p>
+            <button id="enterAppBtn" class="enter-btn animate-up delay-2">Enter Workspace</button>
+        </div>
+        
+    </header>
+
     <nav class="glass-nav">
         <div class="logo">StudySpace</div>
         <ul class="nav-links">
@@ -28,80 +48,82 @@
             </li>
         </ul>
     </nav>
+    <div id="mainWorkspace" class="workspace-hidden">
+        <div class="app-wrapper">
 
-    <div class="app-wrapper">
-
-        <div class="pomodoro-widget glass-panel">
-                <div class="pomodoro-modes">
-                    <button class="mode-btn active" data-mode="work">Focus</button>
-                    <button class="mode-btn" data-mode="break">Break</button>
-                </div>
-                
-                <div class="pomodoro-time" id="timeDisplay">25:00</div>
-                
-                <div class="pomodoro-controls">
-                    <button id="startTimerBtn" class="control-btn primary">Start</button>
-                    <button id="pauseTimerBtn" class="control-btn">Pause</button>
-                    <button id="resetTimerBtn" class="control-btn">Reset</button>
-                </div>
-            </div>
-        
-        <main class="glass-dashboard">
-            <header class="dashboard-header">
-                <h2>Today's Focus</h2>
-                <div class="progress-container">
-                    <svg class="progress-ring" width="120" height="120">
-                        <circle class="progress-ring__bg" cx="60" cy="60" r="50"></circle>
-                        <circle class="progress-ring__fill" cx="60" cy="60" r="50"></circle>
-                    </svg>
-                    <div class="progress-text">
-                        <span id="progress-percent">0%</span>
-                        <span id="progress-stat">0 of 0 tasks</span>
+            <div class="pomodoro-widget glass-panel">
+                    <div class="pomodoro-modes">
+                        <button class="mode-btn active" data-mode="work">Focus</button>
+                        <button class="mode-btn" data-mode="break">Break</button>
+                    </div>
+                    
+                    <div class="pomodoro-time" id="timeDisplay">25:00</div>
+                    
+                    <div class="pomodoro-controls">
+                        <button id="startTimerBtn" class="control-btn primary">Start</button>
+                        <button id="pauseTimerBtn" class="control-btn">Pause</button>
+                        <button id="resetTimerBtn" class="control-btn">Reset</button>
                     </div>
                 </div>
-            </header>
             
+            <main class="glass-dashboard">
+                <header class="dashboard-header">
+                    <h2>Today's Focus</h2>
+                    <div class="progress-container">
+                        <svg class="progress-ring" width="120" height="120">
+                            <circle class="progress-ring__bg" cx="60" cy="60" r="50"></circle>
+                            <circle class="progress-ring__fill" cx="60" cy="60" r="50"></circle>
+                        </svg>
+                        <div class="progress-text">
+                            <span id="progress-percent">0%</span>
+                            <span id="progress-stat">0 of 0 tasks</span>
+                        </div>
+                    </div>
+                </header>
+                
 
-            <div class="task-input-area">
-                <input type="text" id="taskInput" placeholder="What are we studying today?">
-                <select id="prioritySelect" class="priority-dropdown">
-                    <option value="low">Low</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="high">High</option>
-                </select>
-                <button id="addTaskBtn">Add</button>
-            </div>
+                <div class="task-input-area">
+                    <input type="text" id="taskInput" placeholder="What are we studying today?">
+                    <select id="prioritySelect" class="priority-dropdown">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <button id="addTaskBtn">Add</button>
+                </div>
 
-            <ul id="taskList" class="task-list"></ul>
-        </main>
+                <ul id="taskList" class="task-list"></ul>
+            </main>
 
-        <aside class="glass-side-panel">
-            <h3 class="side-title">Priority Overview</h3>
-            
-            <div class="concentric-container">
-                <svg class="concentric-rings" width="160" height="160">
-                    <circle class="ring-bg" cx="80" cy="80" r="30" />
-                    <circle class="ring-fill ring-low" cx="80" cy="80" r="30" />
-                    <circle class="ring-bg" cx="80" cy="80" r="50" />
-                    <circle class="ring-fill ring-medium" cx="80" cy="80" r="50" />
-                    <circle class="ring-bg" cx="80" cy="80" r="70" />
-                    <circle class="ring-fill ring-high" cx="80" cy="80" r="70" />
-                </svg>
-            </div>
-            <div class="side-stats">
-                <span id="side-progress-percent" class="stat-percent">0%</span>
-                <span id="side-progress-stat" class="stat-count">0 of 0 tasks</span>
-            </div>
+            <aside class="glass-side-panel">
+                <h3 class="side-title">Priority Overview</h3>
+                
+                <div class="concentric-container">
+                    <svg class="concentric-rings" width="160" height="160">
+                        <circle class="ring-bg" cx="80" cy="80" r="30" />
+                        <circle class="ring-fill ring-low" cx="80" cy="80" r="30" />
+                        <circle class="ring-bg" cx="80" cy="80" r="50" />
+                        <circle class="ring-fill ring-medium" cx="80" cy="80" r="50" />
+                        <circle class="ring-bg" cx="80" cy="80" r="70" />
+                        <circle class="ring-fill ring-high" cx="80" cy="80" r="70" />
+                    </svg>
+                </div>
+                <div class="side-stats">
+                    <span id="side-progress-percent" class="stat-percent">0%</span>
+                    <span id="side-progress-stat" class="stat-count">0 of 0 tasks</span>
+                </div>
 
-            <div class="side-filters">
-                <button class="filter-btn active" data-priority="high">High</button>
-                <button class="filter-btn" data-priority="medium">Med</button>
-                <button class="filter-btn" data-priority="low">Low</button>
-            </div>
+                <div class="side-filters">
+                    <button class="filter-btn active" data-priority="high">High</button>
+                    <button class="filter-btn" data-priority="medium">Med</button>
+                    <button class="filter-btn" data-priority="low">Low</button>
+                </div>
 
-            <ul id="sideTaskList" class="task-list side-list"></ul>
-        </aside>
+                <ul id="sideTaskList" class="task-list side-list"></ul>
+            </aside>
+        </div>
     </div>
+    </body>
 
     <script src="app.js"></script>
 </body>

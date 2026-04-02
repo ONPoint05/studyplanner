@@ -1,3 +1,53 @@
+// ==========================================
+// --- LOADER & LANDING PAGE LOGIC ---
+// ==========================================
+
+// 1. Force browser to forget previous scroll position on refresh
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
+// 2. Force the page to the absolute top before it even finishes loading
+window.scrollTo(0, 0);
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 3. Lock scrolling so the user is trapped on the landing page
+    document.body.classList.add('no-scroll');
+
+    const loader = document.getElementById('loaderWrapper');
+    const animatedElements = document.querySelectorAll('.animate-up');
+    const enterBtn = document.getElementById('enterAppBtn');
+    const mainWorkspace = document.getElementById('mainWorkspace');
+
+    // Simulate loading data
+    setTimeout(() => {
+        loader.classList.add('fade-out');
+        
+        setTimeout(() => {
+            animatedElements.forEach(el => el.classList.add('visible'));
+        }, 500); 
+
+    }, 2200); // Changed from 1500 to 2200
+    
+
+    // Handle the "Enter Workspace" button click
+    enterBtn.addEventListener('click', () => {
+        // Unlock the scrolling!
+        document.body.classList.remove('no-scroll');
+        
+        // Reveal the workspace
+        mainWorkspace.classList.remove('workspace-hidden');
+        mainWorkspace.classList.add('workspace-visible');
+        
+        // Wait a tiny fraction of a second for the CSS to register, then scroll down
+        setTimeout(() => {
+            mainWorkspace.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+    });
+});
+
+
+
 // 1. DOM Elements
 const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
@@ -371,3 +421,21 @@ function swapTasks(fromIndex, toIndex) {
     // 3. Save to localStorage and redraw the screen!
     saveAndRender();
 }
+// ==========================================
+// --- SMART NAVBAR LOGIC ---
+// ==========================================
+
+let lastScrollY = window.scrollY;
+const navbar = document.querySelector('.glass-nav');
+
+window.addEventListener('scroll', () => {
+    // If we scroll down AND we are past the very top of the page
+    if (window.scrollY > lastScrollY && window.scrollY > 50) {
+        navbar.classList.add('nav-hidden'); // Push it up and away
+    } else {
+        navbar.classList.remove('nav-hidden'); // Bring it back
+    }
+    
+    // Update the last scroll position to the current one
+    lastScrollY = window.scrollY;
+});
